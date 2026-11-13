@@ -1,0 +1,21 @@
+---
+import { getCollection, render } from 'astro:content';
+import Zaklad from '../../layouts/Zaklad.astro';
+import { formatDatum } from '../../datum';
+
+export async function getStaticPaths() {
+  const clanky = await getCollection('clanky', ({ data }) => !data.koncept);
+  return clanky.map((clanek) => ({ params: { id: clanek.id }, props: { clanek } }));
+}
+
+const { clanek } = Astro.props;
+const { Content } = await render(clanek);
+---
+<Zaklad titulek={clanek.data.titulek} popis={clanek.data.popis}>
+  <article>
+    <h1>{clanek.data.titulek}</h1>
+    <p class="datum">{formatDatum(clanek.data.datum)}</p>
+    <Content />
+  </article>
+  <p><a href="/">← Všechny články</a></p>
+</Zaklad>

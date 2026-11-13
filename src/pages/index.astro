@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import Zaklad from '../layouts/Zaklad.astro';
+import { formatDatum } from '../datum';
+
+const clanky = (await getCollection('clanky', ({ data }) => !data.koncept)).sort(
+  (a, b) => b.data.datum.valueOf() - a.data.datum.valueOf(),
+);
+---
+<Zaklad titulek="Můj blog">
+  <ul class="seznam">
+    {clanky.map((c) => (
+      <li>
+        <a href={`/clanky/${c.id}/`}>
+          <h2>{c.data.titulek}</h2>
+        </a>
+        <p class="datum">{formatDatum(c.data.datum)}</p>
+        <p>{c.data.popis}</p>
+      </li>
+    ))}
+  </ul>
+</Zaklad>
+
+<style>
+  .seznam { list-style: none; padding: 0; margin: 0; }
+  .seznam li { padding: 1.5rem 0; border-bottom: 1px solid var(--okraj); }
+  .seznam a { text-decoration: none; }
+  .seznam h2 { margin: 0; line-height: 1.3; }
+  .seznam p { margin: 0.25rem 0 0; }
+</style>

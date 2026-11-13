@@ -1,0 +1,56 @@
+---
+// Společná kostra všech stránek blogu.
+interface Props {
+  titulek: string;
+  popis?: string;
+}
+const nazevBlogu = 'Můj blog';
+const { titulek, popis = 'Postřehy, novinky a návody.' } = Astro.props;
+---
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={popis} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{titulek === nazevBlogu ? titulek : `${titulek} | ${nazevBlogu}`}</title>
+  </head>
+  <body>
+    <header>
+      <a class="nazev" href="/">{nazevBlogu}</a>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>© {new Date().getFullYear()} {nazevBlogu}</footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --text: #1f2933;
+    --tlumeny: #616e7c;
+    --pozadi: #ffffff;
+    --barva: #b42318;
+    --okraj: #e4e7eb;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --text: #e4e7eb; --tlumeny: #9aa5b1; --pozadi: #18181b; --barva: #f97066; --okraj: #323f4b; }
+  }
+  body {
+    margin: 0 auto; max-width: 42rem; padding: 0 1.25rem;
+    font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    font-size: 1.125rem; line-height: 1.7; color: var(--text); background: var(--pozadi);
+  }
+  a { color: var(--barva); }
+  header { padding: 2rem 0 1rem; border-bottom: 1px solid var(--okraj); }
+  .nazev { font-size: 1.4rem; font-weight: 700; color: var(--text); text-decoration: none; }
+  main { padding: 1rem 0 3rem; }
+  footer { border-top: 1px solid var(--okraj); padding: 1.5rem 0 2.5rem; color: var(--tlumeny); font-size: 0.9rem; }
+  blockquote { margin: 1.5rem 0; padding-left: 1rem; border-left: 3px solid var(--barva); color: var(--tlumeny); }
+  code { font-size: 0.9em; }
+  img { max-width: 100%; height: auto; }
+  .datum { color: var(--tlumeny); font-size: 0.95rem; }
+</style>
